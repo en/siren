@@ -1,0 +1,78 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-f', 'svc-match/Dockerfile', '-t', 'gcr.io/$PROJECT_ID/$REPO_NAME/match:latest', '-t', 'gcr.io/$PROJECT_ID/$REPO_NAME/match:$COMMIT_SHA', '.']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-f', 'svc-memorystore/Dockerfile', '-t', 'gcr.io/$PROJECT_ID/$REPO_NAME/memorystore:latest', '-t', 'gcr.io/$PROJECT_ID/$REPO_NAME/memorystore:$COMMIT_SHA', '.']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-f', 'svc-sql/Dockerfile', '-t', 'gcr.io/$PROJECT_ID/$REPO_NAME/sql:latest', '-t', 'gcr.io/$PROJECT_ID/$REPO_NAME/sql:$COMMIT_SHA', '.']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-f', 'svc-wallet/Dockerfile', '-t', 'gcr.io/$PROJECT_ID/$REPO_NAME/wallet:latest', '-t', 'gcr.io/$PROJECT_ID/$REPO_NAME/wallet:$COMMIT_SHA', '.']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-f', 'svc-ws/Dockerfile', '-t', 'gcr.io/$PROJECT_ID/$REPO_NAME/ws:latest', '-t', 'gcr.io/$PROJECT_ID/$REPO_NAME/ws:$COMMIT_SHA', '.']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-f', 'svc-gateway/Dockerfile', '-t', 'gcr.io/$PROJECT_ID/$REPO_NAME/gateway:latest', '-t', 'gcr.io/$PROJECT_ID/$REPO_NAME/gateway:$COMMIT_SHA', '.']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-f', 'svc-wallet/ethereum/Dockerfile', '-t', 'gcr.io/$PROJECT_ID/$REPO_NAME/ethereum:latest', '-t', 'gcr.io/$PROJECT_ID/$REPO_NAME/ethereum:$COMMIT_SHA', '.']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/$REPO_NAME/match:latest']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/$REPO_NAME/match:$COMMIT_SHA']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/$REPO_NAME/memorystore:latest']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/$REPO_NAME/memorystore:$COMMIT_SHA']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/$REPO_NAME/sql:latest']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/$REPO_NAME/sql:$COMMIT_SHA']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/$REPO_NAME/wallet:latest']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/$REPO_NAME/wallet:$COMMIT_SHA']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/$REPO_NAME/ws:latest']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/$REPO_NAME/ws:$COMMIT_SHA']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/$REPO_NAME/gateway:latest']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/$REPO_NAME/gateway:$COMMIT_SHA']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/$REPO_NAME/ethereum:latest']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/$REPO_NAME/ethereum:$COMMIT_SHA']
+- name: 'gcr.io/cloud-builders/kubectl'
+  env:
+  - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=dev'
+  args: ['set', 'image', 'deployment', 'siren-match', 'siren-match=gcr.io/$PROJECT_ID/$REPO_NAME/match:$COMMIT_SHA']
+- name: 'gcr.io/cloud-builders/kubectl'
+  env:
+  - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=dev'
+  args: ['set', 'image', 'deployment', 'siren-memorystore', 'siren-memorystore=gcr.io/$PROJECT_ID/$REPO_NAME/memorystore:$COMMIT_SHA']
+- name: 'gcr.io/cloud-builders/kubectl'
+  env:
+  - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=dev'
+  args: ['set', 'image', 'deployment', 'siren-sql', 'siren-sql=gcr.io/$PROJECT_ID/$REPO_NAME/sql:$COMMIT_SHA']
+- name: 'gcr.io/cloud-builders/kubectl'
+  env:
+  - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=dev'
+  args: ['set', 'image', 'deployment', 'siren-wallet', 'siren-wallet=gcr.io/$PROJECT_ID/$REPO_NAME/wallet:$COMMIT_SHA']
+- name: 'gcr.io/cloud-builders/kubectl'
+  env:
+  - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=dev'
+  args: ['set', 'image', 'deployment', 'siren-ws', 'siren-ws=gcr.io/$PROJECT_ID/$REPO_NAME/ws:$COMMIT_SHA']
+- name: 'gcr.io/cloud-builders/kubectl'
+  env:
+  - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=dev'
+  args: ['set', 'image', 'deployment', 'siren-gateway', 'siren-gateway=gcr.io/$PROJECT_ID/$REPO_NAME/gateway:$COMMIT_SHA']
+- name: 'gcr.io/cloud-builders/kubectl'
+  env:
+  - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=dev'
+  args: ['set', 'image', 'deployment', 'siren-wallet', 'ethereum=gcr.io/$PROJECT_ID/$REPO_NAME/ethereum:$COMMIT_SHA']

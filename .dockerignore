@@ -1,0 +1,6 @@
+Dockerfile
+LICENSE
+README.md
+cloudbuild.yaml
+compile-protos.sh
+local-build.sh

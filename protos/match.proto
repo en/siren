@@ -1,0 +1,197 @@
+syntax = "proto3";
+
+package protos;
+
+option go_package = "github.com/en/siren/protos";
+
+import "google/protobuf/timestamp.proto";
+
+service Match {
+	rpc GetCurrencies (EmptyRequest) returns (GetCurrencyResponse);
+	rpc GetSymbols (EmptyRequest) returns (GetSymbolsResponse);
+	rpc Balances (BalancesRequest) returns (BalancesResponse);
+	rpc NewOrder (NewOrderRequest) returns (NewOrderResponse);
+	rpc Orders (OrdersRequest) returns (OrdersResponse);
+
+	rpc UpdateBalance (UpdateBalanceRequest) returns (UpdateBalanceResponse);
+
+	rpc GetAssetSummary (GetAssetSummaryRequest) returns (GetAssetSummaryResponse);
+	rpc OrderCancel (OrderCancelRequest) returns (OrderCancelResponse);
+	rpc OrderBook (OrderBookRequest) returns (OrderBookResponse);
+	rpc OrderBookDepth (OrderBookDepthRequest) returns (OrderBookDepthResponse);
+	rpc OrderDetail (OrderDetailRequest) returns (OrderDetailResponse);
+	rpc GetMarketSummary (GetMarketSummaryRequest) returns (GetMarketSummaryResponse);
+}
+
+message EmptyRequest {}
+
+message Currency {
+	string id = 1;
+	string name = 2;
+}
+
+message GetCurrencyResponse {
+	repeated Currency currencies = 1;
+}
+
+message Symbol {
+	string id = 1;
+	string base_currency = 2;
+	string quote_currency = 3;
+	string base_min_amount = 4;
+	string base_increment = 5;
+	string quote_increment = 6;
+}
+
+message GetSymbolsResponse {
+	repeated Symbol symbols = 1;
+}
+
+message BalancesRequest {
+	string user_id = 1;
+	string currency = 2;
+}
+
+message Balance {
+	string currency = 1;
+	string balance = 2;
+	string available = 3;
+	string hold = 4;
+}
+
+message BalancesResponse {
+	repeated Balance balances = 1;
+}
+
+message NewOrderRequest {
+	string user_id = 1;
+	string client_order_id = 2;
+	string symbol = 3;
+	string type = 4; // limit or market
+	string side = 5; // buy or sell
+	string price = 6;
+	string amount = 7;
+}
+
+message Order {
+	string id = 1;
+	string price = 2;
+	string amount = 3;
+	string symbol = 4;
+	string side = 5;
+	string type = 6;
+	google.protobuf.Timestamp created_at = 7;
+	google.protobuf.Timestamp updated_at = 8;
+	google.protobuf.Timestamp done_at = 9;
+	string done_reason = 10;
+	string fill_fees = 11;
+	string filled_amount = 12;
+	string remaining_amount = 13;
+	string executed_value = 14;
+	string status = 15; // "pending"
+}
+
+message NewOrderResponse {
+	Order order = 1;
+}
+
+message OrdersRequest {
+	string user_id = 1;
+	string symbol = 2;
+}
+
+message OrdersResponse {
+	repeated Order orders = 1;
+}
+
+// fund management
+message UpdateBalanceRequest {
+	string id = 1;
+	string type = 2;
+	string user_id = 3;
+	string currency = 4;
+	string amount = 5;
+}
+
+message UpdateBalanceResponse {
+}
+//
+
+message GetAssetSummaryRequest {
+	repeated string currencies = 1;
+}
+
+message Asset {
+	string currency = 1;
+	string total = 2;
+	string available = 3;
+	int64 available_count = 4;
+	string hold = 5;
+	int64 hold_count = 6;
+}
+
+message GetAssetSummaryResponse {
+	repeated Asset assets = 1;
+}
+
+message OrderCancelRequest {
+	string user_id = 1;
+	string symbol = 2;
+	string order_id = 3;
+}
+
+message OrderCancelResponse {
+	Order order = 1;
+}
+
+message OrderBookRequest {
+	string symbol = 1;
+	int32 side = 2;
+	// int32 offset = 3;
+	uint64 limit = 3;
+}
+
+message OrderBookResponse {
+	repeated Order orders = 1;
+}
+
+message OrderBookDepthRequest {
+	string symbol = 1;
+	uint64 limit = 2;
+	// double interval = 3;
+}
+
+message OrderBookData {
+	string price = 1;
+	string quantity = 2;
+}
+
+message OrderBookDepthResponse {
+	repeated OrderBookData asks = 1;
+	repeated OrderBookData bids = 2;
+}
+
+message OrderDetailRequest {
+	string symbol = 1;
+	string order_id = 2;
+}
+
+message OrderDetailResponse {
+	Order order = 1;
+}
+
+message GetMarketSummaryRequest {
+	repeated string symbols = 1;
+}
+
+message Market {
+	string symbol = 1;
+	string asks_amount = 2;
+	int64 asks_count = 3;
+	string bids_amount = 4;
+	int64 bids_count = 5;
+}
+
+message GetMarketSummaryResponse {
+	repeated Market markets = 1;
+}

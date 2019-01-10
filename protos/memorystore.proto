@@ -1,0 +1,88 @@
+syntax = "proto3";
+
+option go_package = "github.com/en/siren/protos";
+
+package protos;
+
+service Memorystore {
+	rpc MarketStatus (MarketStatusRequest) returns (MarketStatusReply) {}
+	rpc MarketKline (MarketKlineRequest) returns (MarketKlineReply) {}
+	rpc MarketDeals (MarketDealsRequest) returns (MarketDealsReply) {}
+	rpc MarketLast (MarketLastRequest) returns (MarketLastReply) {}
+	rpc MarketStatusToday (MarketStatusTodayRequest) returns (MarketStatusTodayReply) {}
+}
+
+message MarketStatusRequest {
+	string market = 1;
+	int32 period = 2;
+}
+
+message MarketStatusReply {
+	double low = 1;
+	double high = 2;
+	double open = 3;
+	double close = 4;
+	double volume = 5;
+	double deal = 6;
+	double last = 7;
+}
+
+message MarketKlineRequest {
+	string market = 1;
+	int64 start = 2;
+	int64 end = 3;
+	int64 interval = 4;
+}
+
+message KlineInfo {
+	int64 time = 1;
+	double low = 2;
+	double high = 3;
+	double open = 4;
+	double close = 5;
+	double volume = 6;
+	double deal = 7;
+}
+
+message MarketKlineReply {
+	repeated KlineInfo items = 1;
+}
+
+message MarketDealsRequest {
+	string market = 1;
+	int32 limit = 2;
+	uint64 last_id = 3;
+}
+
+message MarketDeal {
+	string amount = 1;
+	int32 id = 2;
+	int64 time = 3;
+	string price = 4;
+	string type = 5;
+}
+
+message MarketDealsReply {
+	repeated MarketDeal items = 1;
+}
+
+message MarketLastRequest {
+	string market = 1;
+}
+
+message MarketLastReply {
+	double last = 1;
+} 
+
+message MarketStatusTodayRequest {
+	string market = 1;
+}
+
+message MarketStatusTodayReply {
+	double low = 1;
+	double high = 2;
+	double open = 3;
+	double last = 4;
+	double volume = 5;
+	double deal = 6;
+}
